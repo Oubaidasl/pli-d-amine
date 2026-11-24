@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install dependencies
-        run: npm install --allow-remote=all
+        run: npm ci --allow-remote=all
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Build
