@@ -1,0 +1,66 @@
+{
+  "demoData": true,
+  "seasonComplete": false,
+  "weeks": [
+    {
+      "id": "GW1",
+      "label": "Journée 1",
+      "file": "GW1.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW2",
+      "label": "Journée 2",
+      "file": "GW2.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW3",
+      "label": "Journée 3",
+      "file": "GW3.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW4",
+      "label": "Journée 4",
+      "file": "GW4.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW5",
+      "label": "Journée 5",
+      "file": "GW5.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW6",
+      "label": "Journée 6",
+      "file": "GW6.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW7",
+      "label": "Journée 7",
+      "file": "GW7.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW8",
+      "label": "Journée 8",
+      "file": "GW8.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW9",
+      "label": "Journée 9",
+      "file": "GW9.xlsx",
+      "complete": true
+    },
+    {
+      "id": "GW10",
+      "label": "Journée 10",
+      "file": "GW10.xlsx",
+      "complete": true
+    }
+  ]
+}

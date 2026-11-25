@@ -1,9 +1,11 @@
-﻿import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { parseStandings } from './standings.js'
+import { loadMatchWeeks } from './match-weeks.js'
+import { calculateStandings } from './standings.js'
+import PlayerPortrait from './PlayerPortrait.jsx'
+import { demoPhotos, profileUrl } from './profiles.js'
 import './styles.css'
 
-const asset = import.meta.env.BASE_URL + 'assets/' + encodeURIComponent('Pli d Amine.xlsx')
 const columns = [
   ['played', 'MJ', 'Matchs joués'], ['wins', 'V', 'Victoires'],
   ['draws', 'N', 'Matchs nuls'], ['losses', 'D', 'Défaites'],
@@ -11,19 +13,7 @@ const columns = [
   ['goalsAgainst', 'BC', 'Buts contre'], ['difference', 'Diff', 'Différence de buts'],
 ]
 
-async function loadStandings(signal) {
-  let buffer
-  try {
-    const response = await fetch(asset, { signal, cache: 'no-cache' })
-    if (!response.ok) throw new Error()
-    buffer = await response.arrayBuffer()
-  } catch {
-    throw new Error('Impossible de charger le classement. Vérifiez que le fichier Pli d Amine.xlsx est disponible dans le dossier assets.')
-  }
-  return parseStandings(buffer)
-}
-
-function StandingsTable({ players }) {
+function StandingsTable({ teams }) {
   return (
     <>
       <p className="mobile-hint">Faites défiler le tableau pour voir toutes les statistiques.</p>
@@ -39,17 +29,23 @@ function StandingsTable({ players }) {
             </tr>
           </thead>
           <tbody>
-            {players.map((player, index) => (
-              <tr key={player.line}>
-                <td><span className={index === 0 ? 'rank first' : 'rank'}>{index + 1}</span></td>
+            {teams.map((team) => (
+              <tr key={team.team}>
+                <td><span className={team.rank === 1 && !team.tied ? 'rank first' : 'rank'}>{team.rank}</span></td>
                 <th scope="row">
-                  <span className="team">{player.team}</span>
-                  <span className="person">{player.firstName} {player.lastName}</span>
-                  <span className="club">{player.club}</span>
+                  <div className="player-identity">
+                    <PlayerPortrait player={team.player} team={team.team} url={team.portrait} />
+                    <div className="player-details">
+                      <span className="team">{team.team}</span>
+                      {team.player && <span className="person">{team.player}</span>}
+                      {team.club && <span className="club">{team.club}</span>}
+                      {team.tied && <span className="club">Égalité non départagée</span>}
+                    </div>
+                  </div>
                 </th>
                 {columns.map(([key]) => (
                   <td key={key} className={key}>
-                    {key === 'difference' && player[key] > 0 ? '+' + player[key] : player[key]}
+                    {key === 'difference' && team[key] > 0 ? '+' + team[key] : team[key]}
                   </td>
                 ))}
               </tr>
@@ -61,15 +57,84 @@ function StandingsTable({ players }) {
   )
 }
 
+function WeekResults({ week }) {
+  const complete = week.complete && week.matches.length > 0 &&
+    !week.issues.length && week.matches.every((match) => !match.pending)
+
+  return (
+    <section className="notice week">
+      <h3>{week.label}</h3>
+      <p className="club">{complete ? 'Journée terminée' : 'Journée incomplète'}</p>
+      {week.matches.length > 0 ? (
+        <ul className="matches">
+          {week.matches.map((match) => (
+            <li key={match.id}>
+              <span>{match.home}</span>
+              <strong>{match.pending ? 'À jouer' : `${match.homeGoals} – ${match.awayGoals}`}</strong>
+              <span>{match.away}</span>
+            </li>
+          ))}
+        </ul>
+      ) : <p>Aucun match valide pour cette journée.</p>}
+      {week.issues.length > 0 && (
+        <ul className="week-issues">
+          {week.issues.map((issue) => <li key={issue}>{issue}</li>)}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+function League({ data, retry }) {
+  const { demoData, seasonComplete, roster, weeks } = data
+  const hasIssues = weeks.some((week) => week.issues.length > 0)
+  const teams = calculateStandings(roster, weeks).map((team) => ({
+    ...team, portrait: profileUrl(team.player),
+  }))
+  const hasPlayedMatches = teams.some((team) => team.played > 0)
+  return (
+    <>
+      {demoData && <p className="notice demo">Données de démonstration — scores fictifs</p>}
+      <section aria-labelledby="standings-heading">
+        <h2 id="standings-heading">{seasonComplete && !hasIssues ? 'Classement final' : 'Classement provisoire'}</h2>
+        {demoPhotos && hasPlayedMatches && teams.some((team) => team.portrait) && (
+          <p className="club">Photos fictives de démonstration</p>
+        )}
+        {hasPlayedMatches
+          ? <StandingsTable teams={teams} />
+          : <p className="notice">Aucun résultat valide pour calculer le classement.</p>}
+      </section>
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Résultats par journée</h2>
+        {hasIssues && (
+          <div className="notice">
+            <p role="alert">Certains résultats n’ont pas pu être pris en compte. Consultez les messages par journée.</p>
+            <button onClick={retry}>Réessayer</button>
+          </div>
+        )}
+        {weeks.length
+          ? weeks.map((week) => <WeekResults key={week.id} week={week} />)
+          : <p className="notice">Aucune journée publiée.</p>}
+      </section>
+    </>
+  )
+}
+
 function App() {
-  const [players, setPlayers] = useState(null)
+  const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
 
+  const retry = () => {
+    setData(null)
+    setError('')
+    setAttempt((count) => count + 1)
+  }
+
   useEffect(() => {
     const controller = new AbortController()
-    loadStandings(controller.signal)
-      .then((result) => { if (!controller.signal.aborted) setPlayers(result) })
+    loadMatchWeeks(controller.signal)
+      .then((result) => { if (!controller.signal.aborted) setData(result) })
       .catch((failure) => { if (!controller.signal.aborted) setError(failure.message) })
     return () => controller.abort()
   }, [attempt])
@@ -84,12 +149,12 @@ function App() {
       {error ? (
         <section className="notice">
           <p role="alert">{error}</p>
-          <button onClick={() => { setError(''); setAttempt((count) => count + 1) }}>Réessayer</button>
+          <button onClick={retry}>Réessayer</button>
         </section>
-      ) : players ? (
-        <StandingsTable players={players} />
+      ) : data ? (
+        <League data={data} retry={retry} />
       ) : (
-        <p role="status" className="notice">Chargement du classement…</p>
+        <p role="status" className="notice">Chargement des journées et du classement…</p>
       )}
     </main>
   )

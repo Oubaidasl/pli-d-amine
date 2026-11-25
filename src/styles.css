@@ -1,4 +1,4 @@
-﻿* { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
 :root {
   font-family: system-ui, sans-serif;
@@ -39,6 +39,25 @@ tbody tr { --row: #19251d; }
 tbody tr:nth-child(even) { --row: #1d2b22; }
 tbody th, tbody td { background: var(--row); border-top: 1px solid var(--line); }
 tbody th { width: 38%; overflow-wrap: anywhere; }
+.player-identity { display: flex; align-items: center; gap: .65rem; }
+.player-details { min-width: 0; }
+.portrait {
+  flex: none;
+  width: clamp(2rem, 6vw, 2.75rem);
+  aspect-ratio: 1;
+  height: auto;
+  border: 1px solid #526b57;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #2b4534;
+}
+.portrait-initials {
+  display: grid;
+  place-items: center;
+  color: #e5f5d4;
+  font-size: .75rem;
+  font-weight: 750;
+}
 .team, .person, .club { display: block; }
 .team { font-weight: 750; }
 .person, .club { font-size: .875rem; color: var(--muted); font-weight: 400; margin-top: .15rem; }
@@ -63,3 +82,19 @@ button { font: inherit; font-weight: 700; cursor: pointer; border: 0; border-rad
     box-shadow: 1px 0 var(--line);
   }
 }
+.week { margin-top: 1rem; }
+.week h3 { margin: 0 0 .25rem; }
+.demo { color: var(--accent); font-weight: 750; }
+.matches { list-style: none; margin: 0; padding: 0; }
+.matches li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.matches li > :first-child { text-align: right; }
+.matches strong { min-width: 3.5rem; text-align: center; font-variant-numeric: tabular-nums; }
+.week-issues { padding-inline-start: 1.25rem; color: #ffcba7; }
