@@ -1,4 +1,15 @@
 {
-  "demoPhotos": true,
-  "filesByPlayer": {}
+  "demoPhotos": false,
+  "filesByPlayer": {
+    "OUBAIDA ASSLADDAY": "Abu-Oubaida.jpg",
+    "AMINE AARAB": "Amin aarab.jpg",
+    "YOUSSEF WHB": "Yousf whb.jpg",
+    "HAZIM AOURRAM": "Hazim Aouram.jpg",
+    "OTMANE RABBAJ": "Othman Rabaj.jpeg",
+    "TAYEB EL BARNOUSI": "Tayeb.jpeg",
+    "CHIHAB tagmant": "Shihab Taqmant.jpg",
+    "KOSSAY TOUTOUH": "Kousay Toutouh.jpg",
+    "HAMZA ABARSAS": "Hamza Aberssas.jpeg",
+    "YAHYA EL HAROUAL": "Yahya El haroual.jpg"
+  }
 }
