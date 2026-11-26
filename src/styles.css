@@ -258,3 +258,79 @@ button:disabled { color: var(--muted); background: var(--surface-alt); }
   .theme-toggle { padding: .55rem .65rem; }
   .theme-toggle-label { display: none !important; }
 }
+
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+button, .participant-card, .stat-card { transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease; }
+.sidebar-backdrop { animation: fade-in .2s ease both; }
+.player-overlay { animation: fade-in .2s ease both; }
+.player-dialog { animation: dialog-in .24s cubic-bezier(.2,.75,.3,1) both; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+@media (hover: hover) {
+  .participant-card:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1.5rem #006fff18; }
+  .theme-toggle:hover, .menu-button:hover { filter: brightness(.96); }
+}
+
+@media (max-width: 46rem) {
+  html { scroll-padding-top: 4.25rem; }
+  .header-inner { width: calc(100% - 1rem); min-height: 3.75rem; gap: .55rem; }
+  .top-nav { display: none; }
+  .brand { margin-right: auto; font-size: 1rem; }
+  .menu-button, .theme-toggle { width: 2.75rem; height: 2.75rem; min-width: 2.75rem; justify-content: center; padding: .5rem; }
+  main { width: calc(100% - 1.25rem); padding: .85rem 0 max(1.5rem, env(safe-area-inset-bottom)); }
+  .intro { margin-bottom: 1rem; padding: 1.1rem 1.2rem; border-radius: 1rem; }
+  .tournament { gap: .45rem; font-size: .85rem; }
+  h1 { margin: .45rem 0; font-size: clamp(2rem, 10vw, 2.8rem); }
+  .tournament-name { margin-top: .5rem; font-size: 1rem; }
+  main section > h2 { margin: 1.1rem 0 .65rem; font-size: 1.25rem; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  .stat-card { min-width: 0; padding: .8rem; border-radius: .7rem; }
+  .stat-card span { font-size: .75rem; }
+  .stat-card strong { font-size: 1.45rem; }
+  .participants-grid { grid-template-columns: minmax(0, 1fr); gap: .55rem; }
+  .participant-card { min-height: 4.5rem; padding: .75rem; border-radius: .75rem; }
+  .participant-card .portrait { width: 3rem; }
+  .club-logo { width: 1.75rem; height: 1.75rem; }
+  .edition-switcher { max-width: none; width: 100%; margin: 0 0 1rem; }
+  .edition-switcher > button { width: 2.8rem; height: 2.8rem; }
+  .table-scroll { max-width: 100%; border-radius: .75rem; -webkit-overflow-scrolling: touch; }
+  table { min-width: 43rem; }
+  th, td { padding: .65rem .4rem; }
+  tbody th { width: 12rem; }
+  .mobile-hint { margin: .4rem 0 .65rem; }
+  .notice { padding: .9rem; border-radius: .7rem; }
+  .week { margin-top: .7rem; }
+  .matches li { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .35rem; padding: .6rem 0; font-size: .8rem; }
+  .matches .match-team { min-width: 0; gap: .3rem; }
+  .matches .club-logo { width: 1.25rem; height: 1.25rem; }
+  .matches strong { min-width: 3rem; font-size: .8rem; }
+  .player-overlay { place-items: end center; padding: 0; }
+  .player-dialog { width: 100%; height: min(94dvh, 56rem); max-height: 94dvh; padding: 1.2rem 1rem max(1rem, env(safe-area-inset-bottom)); border-radius: 1.1rem 1.1rem 0 0; animation: sheet-in .28s cubic-bezier(.2,.75,.3,1) both; }
+  .player-close { position: absolute; top: .9rem; right: .9rem; }
+  .player-profile { gap: .65rem; padding: .25rem 2.5rem .25rem 0; }
+  .player-profile .portrait { width: 4rem; }
+  .player-profile > .club-logo { width: 2.5rem; height: 2.5rem; }
+  .player-profile h2 { font-size: 1.3rem; }
+  .player-dialog h3 { margin: 1.1rem 0 .55rem; font-size: 1rem; }
+  .player-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+  .player-stat { padding: .55rem; }
+  .player-stat span { font-size: .7rem; }
+  .player-stat strong { font-size: 1.1rem; }
+  .player-match-list { gap: .45rem; }
+  .player-match { padding: .65rem; }
+}
+@keyframes sheet-in { from { opacity: .7; transform: translateY(1.5rem); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 22.5rem) {
+  .header-inner { gap: .35rem; }
+  .brand { font-size: .9rem; }
+  .matches li { font-size: .72rem; }
+  .matches strong { min-width: 2.6rem; font-size: .72rem; }
+  .player-profile .club-logo { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}

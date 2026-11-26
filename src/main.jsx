@@ -239,6 +239,8 @@ function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('pli-theme', theme)
+    const themeColor = document.querySelector('meta[name="theme-color"]')
+    if (themeColor) themeColor.content = theme === 'dark' ? '#101820' : '#ffffff'
   }, [theme])
 
   const retry = () => {
@@ -259,7 +261,7 @@ function App() {
     <>
       <header className="site-header">
         <div className="header-inner">
-          <button className="menu-button" aria-label="Open sidebar" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <button className="menu-button" aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'} aria-controls="site-sidebar" aria-expanded={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)}>
             <span /><span /><span />
           </button>
           <a className="brand" href="#top">Pli-d-Amine</a>
@@ -273,7 +275,7 @@ function App() {
         </div>
       </header>
       {sidebarOpen && <button className="sidebar-backdrop" aria-label="Close sidebar" onClick={closeSidebar} />}
-      <aside className={`sidebar${sidebarOpen ? ' is-open' : ''}`} aria-label="Sidebar navigation" aria-hidden={!sidebarOpen}>
+      <aside id="site-sidebar" className={`sidebar${sidebarOpen ? ' is-open' : ''}`} aria-label="Sidebar navigation" aria-hidden={!sidebarOpen} inert={!sidebarOpen}>
         <div className="sidebar-heading"><span>Navigation</span><button aria-label="Close sidebar" onClick={closeSidebar}>×</button></div>
         {navItems.map(([id, label]) => <a key={id} className={currentView === id ? 'active' : ''} href={`#${id}`} onClick={closeSidebar}>{label}</a>)}
       </aside>
